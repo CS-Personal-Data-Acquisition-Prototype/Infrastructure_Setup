@@ -117,10 +117,31 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh_pi_lte" {
 }
 resource "aws_vpc_security_group_ingress_rule" "allow_data_channel" {
   security_group_id = aws_security_group.dataserversg.id
-  cidr_ipv4         = "0.0.0.0/9"
+  cidr_ipv4         = "0.0.0.0/0"
   from_port         = 9000
   ip_protocol       = "tcp"
   to_port           = 9000
+}
+resource "aws_vpc_security_group_ingress_rule" "allow_test_server" {
+  security_group_id = aws_security_group.dataserversg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 7878
+  ip_protocol       = "tcp"
+  to_port           = 7878
+}
+resource "aws_vpc_security_group_ingress_rule" "allow_main_http" {
+  security_group_id = aws_security_group.dataserversg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 80
+  ip_protocol       = "tcp"
+  to_port           = 80
+}
+resource "aws_vpc_security_group_ingress_rule" "allow_main_https" {
+  security_group_id = aws_security_group.dataserversg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 443
+  ip_protocol       = "tcp"
+  to_port           = 443
 }
 resource "aws_vpc_security_group_egress_rule" "allow_outbound" {
   security_group_id = aws_security_group.dataserversg.id

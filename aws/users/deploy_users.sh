@@ -15,4 +15,4 @@ chmod -R 700 /home/$user/.ssh/
 chown -R $user:$user /home/$user/.ssh/
 done
 { grep 'capstone' /etc/sudoers > /dev/null; } || { echo '%capstone ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers; }
-
+useradd -M -r -s /usr/sbin/nologin -N datasvc

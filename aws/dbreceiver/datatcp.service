@@ -1,0 +1,12 @@
+[Unit]
+Description=Data acquisition TCP server
+After=network.target
+
+[Service]
+User=datasvc
+WorkingDirectory=/dataserver/tcp-server/
+ExecStart=/dataserver/tcp-server/target/release/tcp-server
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
