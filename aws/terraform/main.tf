@@ -81,36 +81,22 @@ resource "aws_network_interface" "dataserver-netif0" {
 }
 resource "aws_security_group" "dataserversg" {
     name = "dataserver-secgrp"
-    description = "Allow SSH from campus, as well as sensor data from anywhere"
+    description = "Allow SSH and sensor data from anywhere"
     vpc_id = aws_vpc.dsvpc.id
     tags = {
         Name = "dataserver-secgrp"
     }
 }
-resource "aws_vpc_security_group_ingress_rule" "allow_ssh_osu" {
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
   security_group_id = aws_security_group.dataserversg.id
-  cidr_ipv4         = "128.193.0.0/16"
+  cidr_ipv4         = "0.0.0.0/0"
   from_port         = 22
   ip_protocol       = "tcp"
   to_port           = 22
 }
-resource "aws_vpc_security_group_ingress_rule" "allow_ssh_lte" {
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh_pi" {
   security_group_id = aws_security_group.dataserversg.id
-  cidr_ipv4         = "100.128.0.0/9"
-  from_port         = 22
-  ip_protocol       = "tcp"
-  to_port           = 22
-}
-resource "aws_vpc_security_group_ingress_rule" "allow_ssh_pi_osu" {
-  security_group_id = aws_security_group.dataserversg.id
-  cidr_ipv4         = "128.193.0.0/16"
-  from_port         = 2222
-  ip_protocol       = "tcp"
-  to_port           = 2222
-}
-resource "aws_vpc_security_group_ingress_rule" "allow_ssh_pi_lte" {
-  security_group_id = aws_security_group.dataserversg.id
-  cidr_ipv4         = "100.128.0.0/9"
+  cidr_ipv4         = "0.0.0.0/0"
   from_port         = 2222
   ip_protocol       = "tcp"
   to_port           = 2222
