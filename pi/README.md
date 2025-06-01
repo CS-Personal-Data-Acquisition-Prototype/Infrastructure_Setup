@@ -19,7 +19,7 @@ using, and select Next. Don't select any customisation settings if prompted;
 these will be configured later. Ensure you have backed up any important data
 before confirming.
 
-## Imaging Manually
+### Imaging Manually
 
 If you are using Linux or macOS, you can [pick an image manually](https://www.raspberrypi.com/software/operating-systems/) and decompress it using `xz -d` or
 with Finder if using macOS. Make sure to pick the correct image type for your Pi
@@ -67,6 +67,13 @@ password. Run `sudo raspi-config` and set the following settings:
 - Localization Options > Locale: Select `en_US.UTF-8` and other necessary locales. Change default locale as needed.
 - Localization Options > Timezone: Select correct timezone for your location.
 When done, select Finish. Reboot and log back in if prompted.
+
+### Enabling RTC Battery Charging
+
+If you have an RTC battery connected, enable charging with the following:
+```bash
+sudo echo "dtparam=rtc_bbat_vchg=3000000" >> /boot/firmware/config.txt
+```
 
 ## 2a. Wi-Fi Setup
 
@@ -130,5 +137,43 @@ ping -6 -n 4 cloudflare.net
 To install dependencies and the transmitter program, simply run:
 ```bash
 wget https://github.com/CS-Personal-Data-Acquisition-Prototype/Infrastructure_Setup/raw/refs/heads/main/pi/pi_config.sh
+chmod +x ./pi_config.sh
 sudo ./pi_config.sh
 ```
+
+This will install the necessary dependencies and then install the ECE
+consolidation scripts as well as Pi_Transmit into `/data-acq/`. Enter the
+Rust_TCP server IP when prompted.
+
+Then, to run each component:
+
+```bash
+sudo su
+cd /data-acq/
+python3 ./dbScript_schema.py
+# Press Ctrl-Alt-F2 to switch into another terminal, and then log in.
+sudo su
+cd /data-acq/Pi_Transmit/
+cargo run --release
+```
+To cycle between terminals, press Ctrl-Alt-F1...F6.
+
+Press Ctrl-C to stop each script. `dbScript_schema.py` needs two Ctrl-C presses
+to fully stop that script.
+
+## 4. Configuring Automatic SSH Tunneling
+
+To configure remote SSH, first drop an SSH private key into `/root/` and make
+sure that it cannot be accessed by other users:
+
+```bash
+chmod 400 /root/.ssh/privatekey
+chown root:root /root/.ssh/privatekey
+```
+
+The configuration script discussed earlier will drop a `pi_remotessh.sh` script
+into the location of the configuration script. Run it with `sudo` to configure
+automatic SSH reverse tunneling. Make sure to enter an absolute path name
+(like `/root/.ssh/privatekey`) when configuring.
+
+Once configured, access the Pi by connecting to port 2222 on the remote machine.

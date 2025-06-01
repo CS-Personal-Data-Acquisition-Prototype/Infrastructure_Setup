@@ -1,0 +1,13 @@
+[Unit]
+Description=Remote SSH headless service
+After=network.target
+
+[Service]
+User=root
+ExecStart=/usr/bin/ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -R 2222:127.0.0.1:22 -N -i <path> <user>@<ipaddr>
+KillMode=process
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
