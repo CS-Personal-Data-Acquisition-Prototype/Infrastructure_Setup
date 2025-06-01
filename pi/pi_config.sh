@@ -4,6 +4,7 @@ apt-get update
 apt-get full-upgrade -y
 apt-get install -y git
 curl https://sh.rustup.rs -sSf | sh -s -- -y
+. "$HOME/.cargo/env"
 # create folders
 umask 0000
 rm -rf /data-acq/
